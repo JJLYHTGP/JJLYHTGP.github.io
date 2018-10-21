@@ -3,8 +3,6 @@
 - [GitHub](https://github.com/JJLYHTGP/JJLYHTGP.github.io)
 - [CSDN](https://me.csdn.net/qq_33291740)
 
-
-
 ### Content
 #### diary
 
@@ -39,7 +37,7 @@
 
 #### Others
 
-[前端知识总结](https://github.com/JJLYHTGP/JJLYHTGP.github.io/blob/master/Web/%E5%89%8D%E7%AB%AF%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93.md)
+- [前端知识总结](https://github.com/JJLYHTGP/JJLYHTGP.github.io/blob/master/Web/%E5%89%8D%E7%AB%AF%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93.md)
 
 ```
 遇到的一些面试问题，稍微总结了一下
