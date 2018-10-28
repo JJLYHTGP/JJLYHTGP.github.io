@@ -64,16 +64,16 @@ console.log(deepFlatten(arr));// [2, 3, 2, 2, 3, "f", "w", 3, {name: "Tom"}]
      | toLocalString |                 |                                                              |                                  |                    |
      | valueOf       |                 |                                                              |                                  |                    |
 
-    
+​    
 
 ```javascript
  // slice是一层深拷贝
 var a = [[1,2,3],4,5];
-var b = a.splice();
-console.log(a === b);// true
+var b = a.slice();
+console.log(a === b);// false
 a[0][0] = 6;
-console.log(a===b); // true
-console.log(a[0] === b[0]); // false
+console.log(a === b); // false
+console.log(a[0] === b[0]); // true
 ```
 
 
