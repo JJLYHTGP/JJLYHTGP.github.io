@@ -156,7 +156,7 @@
 3. display为flex等
 4. 绝对定位（fixed、absolute）
 
-## 参考资料
+# 参考资料
 
 > [十分钟理解BFC原理](https://zhuanlan.zhihu.com/p/25321647)
 > [margin系列之外边距折叠](https://blog.doyoe.com/2013/12/04/css/margin%E7%B3%BB%E5%88%97%E4%B9%8B%E5%A4%96%E8%BE%B9%E8%B7%9D%E6%8A%98%E5%8F%A0/)

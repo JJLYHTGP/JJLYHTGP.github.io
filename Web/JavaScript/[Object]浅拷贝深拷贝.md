@@ -4,7 +4,7 @@
 
 ## 浅拷贝
 
-#### Object.assign 不拷贝继承属性，不拷贝赋值函数
+### Object.assign 不拷贝继承属性，不拷贝赋值函数
 
 ```javascript
 function cloneShallow(source) {
@@ -60,14 +60,14 @@ const objb = Object.defineProperties({}, {
 cloneShallow();
 ```
 
-#### Object.create拷贝继承属性 + Object.getOwnPropertyDescritors 拷贝赋值函数
+### Object.create拷贝继承属性 + Object.getOwnPropertyDescritors 拷贝赋值函数
 
 ```javascript
 function cloneShallow(source) {
 	return Object.create(Object.getPrototypeOf(source), Object.getOwnPropertyDescritors(source));   
 }
 ```
-#### 扩展运算符
+### 扩展运算符
 
 ```javascript
 function cloneShallow(source) {
@@ -75,9 +75,9 @@ function cloneShallow(source) {
 }
 ```
 
-#### 数组：Array.slice、Array.filter、Array.concat
+### 数组：Array.slice、Array.filter、Array.concat
 
-#### 数组：扩展运算符
+### 数组：扩展运算符
 
 ```javascript
 function cloneShallow(arr) {
@@ -87,5 +87,10 @@ function cloneShallow(arr) {
 	return [...arr];   
 }
 ```
+
+
+
 ## 深拷贝
+
+### JSON.parse(JSON.stringify(obj))
 

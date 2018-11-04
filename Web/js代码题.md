@@ -91,3 +91,12 @@ getJSON("/posts.json").then(function(json) {
 </body>
 </html>
 ```
+
+
+
+## 算法
+
+### 数组打乱
+
+#### Fisher–Yates shuffle 洗牌算法
+

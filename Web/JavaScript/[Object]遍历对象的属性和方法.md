@@ -1,37 +1,6 @@
 [TOC]
 
-# 181026面试题
-
-## instanceof的原理
-
-```javascript
-var a=1,b=2,c=3;
-function getFunc(a) {
-	return function (b) {
-		console.log(a,b,c);
-	}
-}
-var func = getFunc(4);
-func(5);// 453
-
-function A() {}
-function B() {}
-function C() {}
-
-A.prototype = B.prototype = {};
-C.prototype = Object.create(A.prototype);
-var a = new A();
-var b = new B();
-var c = new C();
-
-console.log(a instanceof B, b instanceof A, c instanceof A, a instanceof C);
-// true true true false
-// 检测B的原型对象是否在A的原型链上 是 是 是 否
-Object.create(proto[, propertiesObject])
-// 新创建对象的原型对象，要添加到新对象的可枚举属性（null 或 object）
-```
-
-## 遍历对象的属性和方法
+# 遍历对象的属性和方法
 
 | 方法                              | 描述                                                         | 不可枚举的 | 继承的 | Symbol |
 | --------------------------------- | ------------------------------------------------------------ | ---------- | ------ | ------ |
