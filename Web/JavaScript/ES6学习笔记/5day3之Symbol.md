@@ -65,7 +65,19 @@ let s2 = Symbol.for('foo');
 s1 === s2 // true
 ```
 
-`Symbol.keyFor`方法返回一个已登记的 Symbol 类型值的`key`。 
+`Symbol.keyFor`方法返回一个已登记的 Symbol 类型值的`key`。
+
+
+
+```javascript
+let s1 = Symbol.for("foo");
+Symbol.keyFor(s1) // "foo"
+
+let s2 = Symbol("foo");
+Symbol.keyFor(s2) // undefined
+```
+
+上面代码中，变量`s2`属于未登记的 Symbol 值，所以返回`undefined`。
 
 ## 实例：模块的Singleton模式
 
