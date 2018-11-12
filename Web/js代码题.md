@@ -24,7 +24,7 @@ const getJSON = function(url) {
     client.onreadystatechange = handler;
     client.responseType = "json";
     client.setRequestHeader("Accept", "application/json");
-    client.send();
+    client.send(null);
 
   });
 

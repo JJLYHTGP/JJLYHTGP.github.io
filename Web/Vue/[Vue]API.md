@@ -29,6 +29,20 @@ Vue.nextTick(function () {
 
 > 2.1.0 起新增：如果没有提供回调且在支持 Promise 的环境中，则返回一个 Promise。请注意 Vue 不自带 Promise 的 polyfill，所以如果你的目标浏览器不原生支持 Promise (IE：你们都看我干嘛)，你得自己提供 polyfill。
 
+### Vue.set
+
+- **参数**：
+
+  - `{Object | Array} target`
+  - `{string | number} key`
+  - `{any} value`
+
+- **返回值**：设置的值。
+
+- **用法**：
+
+  向响应式对象中添加一个属性，并确保这个新属性同样是响应式的，且触发视图更新。它必须用于向响应式对象上添加新属性，因为 Vue 无法探测普通的新增属性 (比如 `this.myObject.newProperty = 'hi'`)
+
 ## 数据
 
 ### data
