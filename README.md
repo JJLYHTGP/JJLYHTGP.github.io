@@ -17,10 +17,12 @@
 ##### JavaScript
 
 - [JavaScript数组降维](https://github.com/JJLYHTGP/JJLYHTGP.github.io/blob/master/Web/JavaScript/JavaScript%E6%95%B0%E7%BB%84%E9%99%8D%E7%BB%B4.md)
+- [ES6学习笔记](https://github.com/JJLYHTGP/JJLYHTGP.github.io/tree/master/Web/JavaScript/ES6%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0)
 
 ##### Vue
 
 - [Vue数据双向绑定](https://github.com/JJLYHTGP/JJLYHTGP.github.io/blob/master/Web/Vue/%5BVue%5D%E6%95%B0%E6%8D%AE%E5%8F%8C%E5%90%91%E7%BB%91%E5%AE%9A.md)
+- [API - Vue](https://github.com/JJLYHTGP/JJLYHTGP.github.io/blob/master/Web/Vue/%5BVue%5DAPI.md)
 
 #### Computer
 
@@ -37,9 +39,4 @@
 
 #### Others
 
-- [前端知识总结](https://github.com/JJLYHTGP/JJLYHTGP.github.io/blob/master/Web/%E5%89%8D%E7%AB%AF%E7%9F%A5%E8%AF%86%E6%80%BB%E7%BB%93.md)
-
-```
-遇到的一些面试问题，稍微总结了一下
-```
-
+- [前端知识图谱-基础](https://github.com/JJLYHTGP/JJLYHTGP.github.io/blob/master/Web/%E5%89%8D%E7%AB%AF%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-%E5%9F%BA%E7%A1%80.md)
