@@ -239,25 +239,103 @@ var p = new Proxy(obj, {
 
 ### deleteProperty(target, propkey)
 
- 拦截delete proxy[propkey]的操作，返回一个布尔值
+ 拦截delete proxy[propkey]的操作，返回一个布尔值，如果这个方法抛出错误或者返回false。当前属性就无法被delete命令删除。
+
+```javascript
+const handler = {
+    deleteProperty (target, key) {
+        invariant(key, 'delete');
+        delete target[key];
+        return true;
+    }
+}
+
+const invariant = (key, action) {
+    if (key[0] === '_') {
+        throw new Error(`Invalid attempt to ${action} private "${key}" property`);
+    }
+}
+
+var target = { _prop: 'foo' };
+var proxy = new Proxy(target, handler);
+delete proxy._prop
+// Error: ...
+```
+
+注意，目标对象自身的不可配置（configurable）的属性，不能被`deleteProperty`方法删除，否则报错。
 
 ### ownKeys(target)
 
 拦截Object.getOwnPropertyNames(proxy)、Object.getOwnPropertySymbols(proxy)、Object.keys()、for...in循环，返回一个数组，该方法返回目标对象的所有自身属性的属性名
 
+使用`Object.keys`方法时，有三类属性会被`ownKeys`方法自动过滤，不会返回。
+
+- 目标对象上不存在的属性
+- 属性名为 Symbol 值
+- 不可遍历（`enumerable`）的属性
+
 ### getOwnPropertyDescriptor(target， propkey)
-拦截Object.getOwnPropertyDescripter(proxy, propkey)，返回属性的描述对象
+拦截Object.getOwnPropertyDescripter(proxy, propkey)，返回属性的描述符对象或undefined
+
+
 
 ### defineProperty(target, propkey, propkey)
 拦截Object.defineProperty(target, propkey, propdesc) Object.defineProperties(target, propdescs)，返回一个布尔值
+
+如果目标对象不可扩展（extensible），则`defineProperty`不能增加目标对象上不存在的属性，否则会报错。另外，如果目标对象的某个属性不可写（writable）或不可配置（configurable），则`defineProperty`方法不得改变这两个设置。
 
 ### preventExtensions(target)
 拦截Object.preventExtensions(proxy)，返回一个布尔值
 ### getPrototypeOf(target)
 拦截Object.getPrototypeOf(proxy)返回一个对象
+
+`getPrototypeOf`方法主要用来拦截获取对象原型。具体来说，拦截下面这些操作。
+
+- `Object.prototype.__proto__`
+- `Object.prototype.isPrototypeOf()`
+- `Object.getPrototypeOf()`
+- `Reflect.getPrototypeOf()`
+- `instanceof`
+
+下面是一个例子。
+
+```javascript
+var proto = {};
+var p = new Proxy({}, {
+  getPrototypeOf(target) {
+    return proto;
+  }
+});
+Object.getPrototypeOf(p) === proto // true
+```
+
+上面代码中，`getPrototypeOf`方法拦截`Object.getPrototypeOf()`，返回`proto`对象。
+
+注意，`getPrototypeOf`方法的返回值必须是对象或者`null`，否则报错。另外，如果目标对象不可扩展（extensible）， `getPrototypeOf`方法必须返回目标对象的原型对象。
+
+
+
 ### isExtensible(target)
 
 拦截Object.isExtensible(proxy)，返回一个布尔值
+
+这个方法有一个强限制，它的返回值必须与目标对象的`isExtensible`属性保持一致，否则就会抛出错误。
+
+```javascript
+Object.isExtensible(proxy) === Object.isExtensible(target)
+```
+
+下面是一个例子。
+
+```javascript
+var p = new Proxy({}, {
+  isExtensible: function(target) {
+    return false;
+  }
+});
+
+Object.isExtensible(p) // 报错
+```
 
 ### setPrototypeOf(target, proto)
 拦截Object.setPrototypeOf(proxy, proto)。返回一个布尔值
@@ -290,8 +368,49 @@ Reflect.apply(proxy, null, [9, 10]) // 38
 ### construct(target, args)
 拦截 Proxy 实例作为构造函数调用的操作，比如new proxy(...args)。
 
+construc方法用于拦截new命令
+
+```javascript
+const handler = {
+    // 目标对象，构造函数的参数对象，创建实例对象时new命令作用的构造函数
+    construct (target, args, newTarget) {
+        console.log('constructed');
+        return new target(...args);
+    }
+};
+
+var proxy = new Proxy(function () {}, handler);
+
+new proxy(1);
+```
+
+construct方法返回的必须是一个对象，否则会报错。
+
 ## 3. Proxy.revocable()
 
+返回一个可以取消的proxy实例
+
+```javascript
+let target = {};
+let handler = {};
+
+// 返回了包含proxy实例和可以取消proxy实例的revoke函数
+let { proxy, revoke } = Proxy.revocable(target, handler);
+
+proxy.foo = 123;
+proxy.foo; // 123
+
+// 取消实例后再次访问，就会抛出一个错误
+revoke();
+proxy.foo // TypeError: Revoked
+```
+
+proxy.revocable的一个使用场景是，目标对象不允许直接访问，必须通过代理访问，等到访问结束，就收回代理权，不允许再次访问。
+
 ## 4.  this问题
+
+在Proxy代理的目标对象内部的this关键字会指向proxy代理
+
+
 
 ## 5. 实例：Web服务的客户端
