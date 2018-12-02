@@ -1,6 +1,7 @@
 {
   "compileOnSave": false,
   "compilerOptions": {
+    "removeComments": true,
     "baseUrl": "./",
     "outDir": "./",
     "sourceMap": true,
