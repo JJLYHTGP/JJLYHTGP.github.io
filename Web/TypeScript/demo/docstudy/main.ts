@@ -66,6 +66,7 @@ ro2 = ro; // OK
 */
 
 // 类类型
+/*
 interface ClockConstructor {
   new (hour: number, minute: number): any;
 }
@@ -74,6 +75,7 @@ class Clock implements ClockConstructor {
   currentTime: Date;
   constructor(h: number, m: number) { }
 }
+*/
 /* Class 'Clock' incorrectly implements interface 'ClockConstructor'.
   Type 'Clock' provides no match for the signature 
   'new (hour: number, minute: number): any'. 
@@ -115,8 +117,9 @@ class AccountingDepartment extends Department {
 }
 
 let department: Department; // 允许创建一个对抽象类型的引用
-department = new Department(); // 错误: 不能创建一个抽象类的实例
+// department = new Department(); // 错误: 不能创建一个抽象类的实例
 department = new AccountingDepartment(); // 允许对一个抽象子类进行实例化和赋值
 department.printName();
 department.printMeeting();
-department.generateReports(); // 错误: 方法在声明的抽象类中不存在
+// department.generateReports(); // 错误: 方法在声明的抽象类中不存在
+
