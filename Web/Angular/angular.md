@@ -787,13 +787,58 @@ ng-template是一个angular元素，用来渲染HTML，但是不会直接显示�
 
 ### 可观察对象
 
-
-
-#### 基本用法
+可观察对象在应用的发布者和订阅者之间传递消息。
 
 #### 定义观察者
 
+用于接收可观察对象通知的处理器要实现Observer接口，这个对象定义了一些回调函数来处理可观察对象可能会发来的三种通知。
+
+| 通知类型 | 说明                                                         |
+| -------- | ------------------------------------------------------------ |
+| next     | 必要。用来处理每个送达值，在开始执行后可能执行零次或多次     |
+| error    | 可选。用来处理错误通知。错误会中断这个可观察对象实例的执行过程 |
+| comlete  | 可选。用来处理执行完毕的通知。当执行完毕后，这些值就会继续传给下一个处理器。 |
+
+
+
+#### 基本用法和词汇
+
+订阅者subscriber，订阅者函数用于定义如何获取或生成那些需要发布的值或消息
+
+```javascript
+const locations = new Observable((observer) => {
+   	const {next, error} = observer;
+    let watchId;
+    
+    if ('geolocation' in navigator) {
+        watchId = navigator.geolocation.watchPosition(next, error);
+    } else {
+        error('Geolocation not available');
+    }
+    return {
+        unsubscribe() { 
+            navigator.geolocation.clearWatch(watchId); 
+        }
+    };
+});
+
+// 要执行所创建的可观察对象，并开始从中接收通知，就要调用subscribe方法，并传入一个观察者(一个JavaScript对象，定义了收到这些消息的处理器handler)
+const locationsSubscription = locations.subscribe({
+    next(position) {
+        console.log('Current Position: ', position);
+    },
+    error(msg) {
+        console.log('Error getting location: ', msg);
+    }
+});
+
+// subscribe会返回一个Subscription对象，该对象会有一个unsubscribe方法，可以调用该方法停止接收通知
+setTimeout(()=>{locationsSubscription.unsubscribe();}, 10000);
+```
+
 #### 订阅
+
+
 
 #### 创建可观察对象
 
@@ -803,9 +848,83 @@ ng-template是一个angular元素，用来渲染HTML，但是不会直接显示�
 
 ### RxJS库
 
+#### 创建可观察对象的函数
+
+```ts
+fromPromise
+
+interval(100);
+
+fromEvent(HTMLElement, 'click');
+
+ajac('/api/data');
+```
+
+
+
+#### 操作符
+
+操作符接受一些配置项，然后返回一个以来源可观察对象为参数的函数，当执行这个返回的函数时，这个操作符会观察来源可观察对象发出的值，转换它们，并返回由转换后的值组成的新的可观察对象。
+
+可以用管道把操作符链接起来，当执行其中的函数时，会顺序执行被组合进去的函数。
+
+Map 将给定地project函数应用于源Observable对象发出的每个值，并将结果值作为Observable发出
+
+switchMap 将每个源值投射成Observable，该Observable会合并到输出observable中，并且只发出最新投射地observable中的值。
+
+filter 只发送源Observable中满足指定函数的项来进行过滤
+
+#### 错误处理
+
+catchError 允许在管道中处理已知错误。
+
+retry 重试失败的可观察对象
+
+#### 可观察对象的命名约定
+
 ### Angular中的可观察对象
 
+#### 事件发送器EventEmitter
+
+#### HTTP
+
+
+
+#### Async管道
+
+#### 路由器(router)
+
+#### 响应式表单(reactive forms)
+
 ### 用法实战
+
+#### 输入提示
+
+```ts
+const searchInput = document.getElementById('search');
+
+const typeahead = fromEvent(searchInput, 'input')
+	.pipe(
+        // 将指定的值发送
+        map((e: keyboardEvent) => e.target.value),
+        // 最小长度限制
+    	filter(text => text.length > 2),
+        // 防抖，防止连续按键时每次按键都发起请求
+        debounceTime(10),
+        distinctUntilChanged(),
+        switchMap(() => ajax('/api/endpoint'))
+    );
+
+typeahead.subscribe((data) => {
+    // 发送数据请求
+});
+```
+
+
+
+#### 指数化退避
+
+
 
 ### 与其他技术的比较
 
@@ -814,6 +933,97 @@ ng-template是一个angular元素，用来渲染HTML，但是不会直接显示�
 ## 引导启动
 
 ## Angular模块
+
+### JS模块 vs NgModule
+
+- angular模块绑定的可声明的类，只供angular编译器使用
+- NgModule可以通过服务提供商来用服务扩展整个应用
+
+### NgModule简介
+
+@NgModule装饰器的类
+
+```ts
+@NgModule({
+    // 该应用所拥有的组件。每个组件只能声明在一个NgModule类中
+    declarations: []，
+    // 导入BrowserModule以获取浏览器特有服务，如DOM渲染，sanitization, location。当前NgModule所需的其他模块
+    imports: [], 
+    // 各种服务提供商
+    providers: [], 
+    // 根组件，angular创建它并插入index.html宿主页面
+    bootstrap: [], 
+    // 公开其中的部分组件、指令和管道。以便其他模块中的组件模板中可以使用它们
+    exports: [],
+})
+```
+
+`declarations` 数组只能接受可声明对象。可声明对象包括组件、[指令](https://www.angular.cn/guide/attribute-directives)和[管道](https://www.angular.cn/guide/pipes)。 一个模块的所有可声明对象都必须放在 `declarations` 数组中。 可声明对象必须只能属于一个模块，如果同一个类被声明在了多个模块中，编译器就会报错。
+
+这些可声明的类在当前模块中是可见的，但是对其它模块中的组件是不可见的 —— 除非把它们从当前模块导出， 并让对方模块导入本模块。
+
+
+
+### 常用模块
+
+### 特性模块
+
+
+
+
+
+### 特性模块的分类
+
+| 特性模块         | 声明 | 提供商     | exports      | 被谁导入            | Eg                                                           |
+| ---------------- | ---- | ---------- | ------------ | ------------------- | ------------------------------------------------------------ |
+| 领域             | 有   | 罕见       | 顶级组件     | 特性模块，AppModule | Common/component/component.module声明所有公共组件，导入所有公共组件和第三方组件库，导出所有公共组件和组件库。被（业务模块）导入。导出一个Module |
+| 带路由的特性模块 | 有   | 罕见       | 无           | 无                  | 带路由的特性模块不会导出任何东西，因为它们的组件永远不会出现在外部组件的模板中。 |
+| 路由模块         | 无   | 是（守卫） | RouterModule | 特性（供路由使用）  |                                                              |
+| 服务             | 无   | 有         | 无           | AppModule           | 根模块 `AppModule` 是唯一的可以导入服务模块的模块。          |
+| 窗口部件         | 有   | 罕见       | 有           | 特性                |                                                              |
+
+
+
+### 入口组件
+
+
+
+### 服务提供商
+
+#### 提供服务
+
+```ts
+@Injectable({
+    providedIn: 'root'
+})
+export class UserService {}
+```
+
+#### 提供商的作用域
+
+#### providedIn与NgModule
+
+#### 使用惰性加载
+
+
+
+#### 使用组件限定服务商
+
+#### 在模块or组件中提供服务
+
+#### 关于NgModule
+
+
+
+### 单例应用
+
+### 惰性加载的特性模块
+
+### 共享angular模块
+
+### NgModule API
+
+### NgModule常见问题
 
 ## 依赖注入
 
