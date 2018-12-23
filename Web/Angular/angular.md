@@ -25,7 +25,7 @@ app.module.ts
         BoardComponent
     ],
    // 导出表 能在其他模块的组件模板中使用的可声明对象的子集
-    export:
+    export: []
     // 导入表 导出了本模块中的组件模板所需的类的其他模块
   	imports: [
     	BrowserModule
@@ -39,10 +39,25 @@ export class AppModule { }
 ```
 
 - NgModule为其中的组件提供了一个编译上下文环境。根模块总会有一个根组件，并在引导期间创建它。
-
 - 任何模块都能包含任意数量的其他组件。
 - 组件可以通过路由器加载，也可以通过模板创建
 - 属于这个NgModule的组件会共享同一个编译上下文环境
+
+| 选项            | 说明                                                         |      |      |
+| --------------- | ------------------------------------------------------------ | ---- | ---- |
+| Providers       |                                                              |      |      |
+| Declarations    | 可声明对象表，属于本NgModule的组件、指令、管道               |      |      |
+| Imports         | 导入表 导出了本模块中的组件模板所需的类的其他模块            |      |      |
+| Exports         | 此 NgModule 中声明的一组组件、指令和管道可以在导入了本模块的模块下任何组件的模板中使用。 导出的这些可声明对象就是该模块的公共 API。 |      |      |
+| entryComponents | 定义此 NgModule 中要编译的组件集，这样它们才可以动态加载到视图中。 |      |      |
+| bootstrap       | 当该模块引导时需要进行引导的组件。列在这里的所有组件都会自动添加到 `entryComponents` 中。 |      |      |
+|                 |                                                              |      |      |
+|                 |                                                              |      |      |
+|                 |                                                              |      |      |
+|                 |                                                              |      |      |
+|                 |                                                              |      |      |
+
+
 
 ### 组件简介
 
@@ -82,6 +97,21 @@ export class AppComponent {
 - 服务可以依赖其他服务
 
 ## 组件与模板
+
+| 选项                | 取值   | 说明                                                         | 默认值                                                       |
+| ------------------- | ------ | ------------------------------------------------------------ | ------------------------------------------------------------ |
+| changeDetection     | onPush | 用于当前组件的变更检测策略                                   | default                                                      |
+| viewProviders       |        | 定义一组可注入对象，它们在视图的各个子节点中可用。           |                                                              |
+| moduleID            |        | 包含该组件的模块的ID                                         |                                                              |
+| templateUrl         |        |                                                              |                                                              |
+| styleUrls           |        |                                                              |                                                              |
+| animations          |        |                                                              |                                                              |
+| encapsulation       |        |                                                              | [ViewEncapsulation.Emulated](https://angular.cn/api/core/ViewEncapsulation#Emulated) |
+| entryComponents     |        | 一个组件的集合，它应该和当前组件一起编译。对于这里列出的每个组件，Angular 都会创建一个 [`ComponentFactory`](https://angular.cn/api/core/ComponentFactory) 并保存进 [`ComponentFactoryResolver`](https://angular.cn/api/core/ComponentFactoryResolver) 中 |                                                              |
+| preserveWhitespaces |        | `false` 则从编译后的模板中移除可能多余的空白字符。 空白字符就是指那些能在 JavaScript 正则表达式中匹配 `\s` 的字符。默认为 `false`，除非通过编译器选项改写了它。 | false                                                        |
+| providers           |        | 使用一个 [令牌](https://angular.cn/guide/glossary#di-token) 配置该指令或组件的 [注入器](https://angular.cn/guide/glossary#injector)，该令牌会映射到一个依赖项的[提供商](https://angular.cn/guide/glossary#provider)。 |                                                              |
+
+
 
 ### 显示数据
 
@@ -1027,11 +1057,128 @@ export class UserService {}
 
 ## 依赖注入
 
+### Angular依赖注入
+
+依赖是类需要执行其功能时，所需要的服务或对象。DI是一种编码模式，其中的类会从外部源中请求获取依赖，而不是自己创建
+
+#### 创建和注册可注入的服务
+
+你可以用三种方式之一来设置元数据，以便在应用的不同层级使用提供商来配置各个注入器：
+
+- 在服务本身的 `@Injectable()` 装饰器中。
+- 在 NgModule 的 `@NgModule()` 装饰器中。
+- 在组件的 `@Component()` 装饰器中。
+
+`@Injectable()` 装饰器具有一个名叫 `providedIn` 的元数据选项，在那里你可以指定把被装饰类的提供商放到 `root` 注入器中，或某个特定 NgModule 的注入器中。
+
+`@NgModule()` 和 `@Component()` 装饰器都有用一个 `providers` 元数据选项，在那里你可以配置 NgModule 级或组件级的注入器。
+
+#### 注入服务
+
+*在某个注入器*的范围内，服务是单例的。也就是说，在指定的注入器中最多只有某个服务的最多一个实例。
+
+#### 测试带有依赖的组件
+
+#### 需要其他服务的服务
+
+### 多级注入器
+
+### DI提供商
+
+### DI实战
+
+#### 嵌套的服务依赖
+
+```typescript
+// component.ts
+constructor(private logger: LoggerService, private userContext: UserContextService){
+  	userContext.loadUser(this.userId);
+    logger.logInfo('AppComponent initialized');
+}
+
+// UserContext依赖LoggerService 和 UserService
+// 当Angular新建AppComponent时，依赖注入框架会首先创建一个LoggerService的实例，然后创建UserContextService的实例。UserContextService 也需要框架刚刚创建的这个 LoggerService 实例，这样框架才能为它提供同一个实例。
+```
+
+#### 服务范围限制在组件子树
+
+Angular 应用程序有多个依赖注入器，组织成一个与组件树平行的树状结构。 每个注入器都会创建依赖的一个单例。在所有该注入器负责提供服务的地方，所提供的都是同一个实例。 
+
+当 Angular 新建 `HeroBaseComponent` 的时候，它会同时新建一个 `HeroService` 实例，该实例只在该组件及其子组件(如果有)中可见。
+
+#### 多个服务实例（沙箱式隔离）
+
+
+
+
+
+类不存在变量提升，因此不能在类定义前引用。
+
+forwardRe向前引用 https://www.angular.cn/guide/dependency-injection-in-action#break-circularities-with-a-forward-class-reference-emforwardrefem
+
+
+
+### 浏览组件树
+
 ## HttpClient
+
+
+
+#### 获取JSON数据
+
+#### 错误处理
+
+#### 可观察对象和操作符
+
+#### 请求非JSON格式的数据
+
+#### 把数据发送到服务器
+
+#### 高级用法
+
+#### 安全：XSRF防护
+
+#### 测试HTTP请求
 
 ## 路由与导航
 
+
+
 ## 动画
+
+### 简介
+
+### 转场与触发器
+
+### 复杂序列
+
+### 可复用动画
+
+### 路由转场动画
+
+## 安全
+
+## 国际化
+
+## Service Worker与PWA
+
+## 服务端渲染
+
+## CLI命令
+
+## npm包
+
+## TS配置
+
+## AOT
+
+## 构建与运行
+
+## 测试
+
+## 发布
+
+## 浏览器支持
 
 
 
