@@ -7,15 +7,18 @@
 #### diary
 
 - [春招心得 2018/5/29](https://github.com/JJLYHTGP/JJLYHTGP.github.io/blob/master/diary/2018.2-2018.5%E6%98%A5%E6%8B%9B%E5%BF%83%E5%BE%97.md)
-- [秋招经历百度、腾讯、网易、滴滴、快手、美团等11家互联网公司的前端岗位面试心得]()
+- [秋招经历百度、腾讯、网易、滴滴、快手、美团等11家互联网公司的前端岗位面试心得](https://github.com/JJLYHTGP/JJLYHTGP.github.io/blob/master/diary/%E7%A7%8B%E6%8B%9B%E7%BB%8F%E5%8E%86%E7%99%BE%E5%BA%A6%E3%80%81%E8%85%BE%E8%AE%AF%E3%80%81%E7%BD%91%E6%98%93%E3%80%81%E6%BB%B4%E6%BB%B4%E3%80%81%E5%BF%AB%E6%89%8B%E3%80%81%E7%BE%8E%E5%9B%A2%E7%AD%8911%E5%AE%B6%E4%BA%92%E8%81%94%E7%BD%91%E5%85%AC%E5%8F%B8%E7%9A%84%E5%89%8D%E7%AB%AF%E5%B2%97%E4%BD%8D%E9%9D%A2%E8%AF%95%E5%BF%83%E5%BE%97.md)
 
 #### Web
 
 - [前端知识图谱-基础](https://github.com/JJLYHTGP/JJLYHTGP.github.io/blob/master/Web/%E5%89%8D%E7%AB%AF%E7%9F%A5%E8%AF%86%E5%9B%BE%E8%B0%B1-%E5%9F%BA%E7%A1%80.md)
 
 ##### Angular
+- [Angular学习日记](https://github.com/JJLYHTGP/JJLYHTGP.github.io/blob/master/Web/Angular/angular.md)
 
 ##### TypeScript
+- [TypeScript初探]()
+- [TypeScript编译原理]()
 
 ##### RxJS
 

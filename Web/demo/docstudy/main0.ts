@@ -1,27 +1,3 @@
-// 枚举
-enum Color {
-  Red, Green, Blue
-}
-
-enum Color2 {
-  Red = 1, Green, Blue
-}
-
-enum Color3 {
-  Red, Green = 2, Blue
-}
-
-enum Color4 {
-  Red, Green = '', Blue = ''
-}
-
-enum Color5 {
-  Red, Green = '0', Blue = ''
-}
-
-enum Color6 {Red=1, Green=1, Blue=1}
-console.log(Color, Color2, Color3, Color4, Color5, Color6);
-
 // 接口
 /*
 
@@ -83,37 +59,37 @@ class Clock implements ClockConstructor {
 
 
 abstract class Animal {
-  abstract makeSound(): void;
-  move(): void {
-      console.log('roaming the earch...');
-  }
+    abstract makeSound(): void;
+    move(): void {
+        console.log('roaming the earch...');
+    }
 }
 
 abstract class Department {
 
-  constructor(public name: string) {
-  }
+    constructor(public name: string) {
+    }
 
-  printName(): void {
-      console.log('Department name: ' + this.name);
-  }
+    printName(): void {
+        console.log('Department name: ' + this.name);
+    }
 
-  abstract printMeeting(): void; // 必须在派生类中实现
+    abstract printMeeting(): void; // 必须在派生类中实现
 }
 
 class AccountingDepartment extends Department {
 
-  constructor() {
-      super('Accounting and Auditing'); // 在派生类的构造函数中必须调用 super()
-  }
+    constructor() {
+        super('Accounting and Auditing'); // 在派生类的构造函数中必须调用 super()
+    }
 
-  printMeeting(): void {
-      console.log('The Accounting Department meets each Monday at 10am.');
-  }
+    printMeeting(): void {
+        console.log('The Accounting Department meets each Monday at 10am.');
+    }
 
-  generateReports(): void {
-      console.log('Generating accounting reports...');
-  }
+    generateReports(): void {
+        console.log('Generating accounting reports...');
+    }
 }
 
 let department: Department; // 允许创建一个对抽象类型的引用
@@ -123,3 +99,8 @@ department.printName();
 department.printMeeting();
 // department.generateReports(); // 错误: 方法在声明的抽象类中不存在
 
+window.onmousedown = function (mouseEvent) {
+    console.log(mouseEvent.button);  //<- Now, no error is given
+};
+
+let x = [0, 1, ''];

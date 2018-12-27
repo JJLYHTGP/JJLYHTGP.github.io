@@ -1184,3 +1184,51 @@ forwardRe向前引用 https://www.angular.cn/guide/dependency-injection-in-actio
 
 
 
+# 查漏补缺
+
+## 模板与组件
+
+### 输入属性命名
+
+`title`属性是全局属性（所有HTML元素共有的属性；可以用于所有的元素，即使属性不起作用）。因此不要把输入属性命名为`title`。
+
+```html
+<app-dialog title="新建"></app-dialog>
+```
+
+这样的话title除了被认为是输入数学，也变成了HTML元素的属性，可能造成其他后果。
+
+### `hidden`与`*ngIf`与`ng-show`
+
+1. `ng-show`是AngularJS的语法
+
+2. 性能讨论
+
+   - `*ngIf`是移除整个DOM元素，销毁了子树中的组件及其状态，也释放了资源。模板表达式如果为真，渲染模板，否则，不渲染模板。当隐藏（visibility、display）子树时，子树中的组件与状态仍然保留，Angular也继续检查变更，占用相当可观的内存和计算资源。
+   - `ngIf`可以进行防范空指针错误，而显示/隐藏的方式无法防范。
+
+3. [NgIf - API](https://www.angular.cn/api/common/NgIf)
+
+   `ngIf` 会对 `expression` 进行求值，如果为真，则在原地渲染 `then` 模板，否则渲染 `else` 模板。通常：
+
+   - `then` 模板就是 `ngIf` 中内联的模板 —— 除非你指定了另一个值。
+   - `else` 模板是空白的 —— 除非你另行指定了。
+
+   ```html
+   <div *ngIf="condition; then thenBlock else elseBlock"></div>
+   <ng-template #thenBlock>...</ng-template>
+   <ng-template #elseBlock>...</ng-template>
+   ```
+
+4. [hidden | MDN](https://developer.mozilla.org/zh-CN/docs/Web/HTML/Global_attributes/hidden)
+
+   `hidden`是全局属性。改变具有hidden属性的元素的CSS的 [`display`](https://developer.mozilla.org/zh-CN/docs/Web/CSS/display) 属性将覆盖该行为。 例如, 元素被设置为 `display: flex` 将会导致元素显示出来，尽管设置了hidden属性。
+
+### `ng-content`与内容投影
+
+### `ng-template`
+
+### `viewChild`、`viewChildren`和`contentChild`、`contentChildren`
+
+[understanding viewchildren viewchild contentchildren and contentchild](https://medium.com/@tkssharma/understanding-viewchildren-viewchild-contentchildren-and-contentchild-b16c9e0358e)
+
