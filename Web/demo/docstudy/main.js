@@ -12,6 +12,8 @@ var typecheck;
     var name2 = "my name is " + name1; // 模板字符串
     // symbol
     var prop = Symbol();
+    // null
+    // undefined
     // Array
     var arr = [0];
     // Tuple
@@ -54,13 +56,7 @@ var typecheck;
         Color6[Color6["Green"] = 1] = "Green";
         Color6[Color6["Blue"] = 1] = "Blue";
     })(Color6 || (Color6 = {}));
-    var Color7;
-    (function (Color7) {
-    })(Color7 || (Color7 = {}));
-    (function (Color7) {
-        Color7[Color7["Red"] = 0] = "Red";
-    })(Color7 || (Color7 = {}));
-    var colors = [Color, Color2, Color3, Color4, Color5, Color6, Color7];
+    var colors = [Color, Color2, Color3, Color4, Color5, Color6];
     console.log(typeof Color, colors); // object
     console.log(Color6[1]);
     /*
@@ -81,6 +77,19 @@ var typecheck;
         Red: 0
     }
     */
+    var Color7;
+    (function (Color7) {
+    })(Color7 || (Color7 = {}));
+    (function (Color7) {
+        Color7[Color7["Red"] = 0] = "Red";
+    })(Color7 || (Color7 = {})); // 生效
+    var AnimalFlags;
+    (function (AnimalFlags) {
+        AnimalFlags[AnimalFlags["None"] = 0] = "None";
+        AnimalFlags[AnimalFlags["HasClaws"] = 1] = "HasClaws";
+        AnimalFlags[AnimalFlags["CanFly"] = 2] = "CanFly";
+        AnimalFlags[AnimalFlags["EndangeredFlyingClawedFishEating"] = 3] = "EndangeredFlyingClawedFishEating";
+    })(AnimalFlags || (AnimalFlags = {}));
     // Object
     var obj = {};
     // Date
@@ -96,6 +105,39 @@ var typecheck;
         return Person;
     }());
     var p = new Person();
+    // Set
+    var myset = new Set([1, 2, 3]);
+    var set = new Set([1, 2, 3]);
+    // WeakSet
+    var weakSet = new WeakSet([{}]);
+    // Map
+    var map = new Map();
+    // WeakMap
+    var weakmap = new WeakMap();
+    console.log(map, weakmap, set, weakSet);
+    // Proxy
+    var proxy = new Proxy({}, {});
+    // Promise
+    var promise = new Promise(function (resolve) {
+        setTimeout(function () {
+            resolve();
+        }, 0);
+    });
+    promise.then(function () { console.log('resolved'); });
+    // ArrayBuffer
+    var buf = new ArrayBuffer(32);
+    // ...
+    // void
+    function warnUser() {
+        console.log("函数没有返回值");
+    }
+    // 类型断言
+    var foo1 = { a: 1 };
+    foo1.bar = 123; // Error: 'bar' 属性不存在于 ‘{}’
+    foo1.bas = 'hello'; // Error: 'bas' 属性不存在于 '{}'
+    var foo2 = {};
+    foo2.bar = 123;
+    foo2.bas = 'hello';
 })(typecheck || (typecheck = {}));
 var enumcheck;
 (function (enumcheck) {
@@ -105,4 +147,3 @@ var enumcheck;
     })(Color7 || (Color7 = {}));
     console.log(Color7);
 })(enumcheck || (enumcheck = {}));
-console.log(Color7);
