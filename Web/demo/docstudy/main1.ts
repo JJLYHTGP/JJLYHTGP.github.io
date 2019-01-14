@@ -109,9 +109,10 @@ enum AnimalFlags {
 
 
 // Object
-const obj: object = {};
-const obj1: Object = {};
-const obj2: {} = {};
+const obj2: object = {};
+const obj3: object = {age:1};
+const obj1: Object = '';
+const obj4: {} = '';
 
 
 

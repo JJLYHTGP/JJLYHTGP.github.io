@@ -1142,6 +1142,51 @@ forwardRe向前引用 https://www.angular.cn/guide/dependency-injection-in-actio
 
 ## 路由与导航
 
+每个带路由的angular应用都有一个**Router(路由器)**服务的单例对象。当浏览器的URL变化时，路由器会查找对应的**Route(路由)**，并据此决定该显示哪个组件。路由器采用**先匹配者优先**的策略匹配路由。
+
+```ts
+const routes: Routes = [
+    {
+        path: 'crisis-center',
+        component: CrisisListComponent
+    },
+    // :id是一个路由参数的Token
+    {
+        path: 'hero/:id',
+     	component: HeroDetailComponent
+    },
+    // data属性用来存放每个具体路由有关的任意信息。该数据可以被任何一个激活路由访问，并能用来保存诸如页标题、面包屑以及其他静态只读数据。
+    {
+        path: 'heros',
+     	component: HeroListComponent,
+        data: { title: 'hero list' }
+    },
+    // 匹配URL为空时的情况
+    {
+        path: '',
+        redirectTo: '/heros',
+        pathMatch: 'full'
+    },
+    // **是通配符。当所请求的URL不匹配前面定义的路由表中的任何路径时，路由器就会选择此路由
+    {
+        path: '**',
+        component: NotFoundComponent
+    }
+];
+
+@NgModule({
+    imports: [
+        RouteModule.forRoot(
+        	routes,
+            {
+                enableTracing: true
+            }
+        )
+    ]
+})
+export class AppModule { }
+```
+
 
 
 ## 动画

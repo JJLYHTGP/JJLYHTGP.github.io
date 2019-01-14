@@ -137,7 +137,57 @@
    const proxy: Proxy = new Proxy({}, {}); // Cannot find name 'Proxy'. [2304]
    ```
 
-5. 对象`object`
+5. 对象
+
+   - `object`
+
+     **`Object`、`object`、`{}`的区别**
+
+     [Typescript object / Object - assignment issue - stackoverflow](https://stackoverflow.com/questions/48792636/typescript-object-object-assignment-issue)
+
+     [TypeScript 2.2: The object Type](https://blog.mariusschulz.com/2017/02/24/typescript-2-2-the-object-type)
+
+     ```ts
+     var m: object ;
+     
+     m = { name: 'qwerty' };  // works
+     m.name = 'xyz'; // does not work
+     m["name"] = 'abc'; // works
+     ```
+
+     解决方案：
+
+     - `any`批注
+     - `{name: string}`或`{[key: string]: string}`批注
+
+     相同点：
+
+     - 不论是哪一种，直接访问属性`m.name`，类型检查器都不知道属性的存在，会报错。
+
+     不同点：
+
+     -  `{}`：the **empty object type**。描述一个没有成员的对象，如果你试图添加属性，typescript会报错
+
+     - `Object`和`{}`允许`primitive`（基本数据类型）赋值
+
+       ```ts
+       const obj3: object = ''; // error Type '""' is not assignable to type 'object'.
+       const obj1: Object = '';
+       const obj4: {} = '';
+       ```
+
+     - `object`表示一个没有已知属性的对象。可以将任何对象(`non-primitive`)赋值给它。
+
+     总结：
+
+     如果你想要描述一个拥有未知属性的对象，应该定义索引签名
+
+     ```ts
+     let m: { [key: string]: string; };
+     m = { name: 'qwerty' };  // works
+     m.name = 'xyz'; // works
+     m["name"] = 'abc'; // works
+     ```
 
    - `Date`、`RegExp`
 
@@ -265,6 +315,7 @@ foo.bas = 'hello';
 interface LabelledValue {
     label: string;
     name?: string;
+    (source: string, subString: string): boolean;
 }
 ```
 
