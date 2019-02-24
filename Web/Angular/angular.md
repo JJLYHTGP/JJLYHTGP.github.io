@@ -1191,17 +1191,221 @@ export class AppModule { }
 
 ## 动画
 
+在线例子 https://www.angular.cn/generated/live-examples/animations/stackblitz.html
+
+
+
 ### 简介
+
+Angular的动画系统是基于CSS功能构建的，因此可以动浏览器认为可动的任何属性。
+
+[CSS animated properties -MDN](https://developer.mozilla.org/zh-CN/docs/Web/CSS/CSS_animated_properties)
+
+```
+border background color height width margin padding visibility 等等
+```
+
+#### 快速上手
+
+1. 启用动画模块。把 `BrowserAnimationsModule`导入到根模块
+
+2. 导入动画功能
+
+   ```ts
+   import {
+       trigger,
+       state,
+       style,
+       animate,
+       transition
+   } from '@angular/animations';
+   ```
+
+   [动画 API](https://www.angular.cn/api/animations)
+
+3. 添加动画的元数据属性
+
+#### 转场动画
+
+```
+创建一个有名字的动画触发器，由名字和一个动画定义对象创建
+trggiger(name: string, definitions: AnimationMetadata[])
+```
+
+`state()`：在附加到元素的触发器上，声明一个动画状态。 当某个状态在组件中激活时，它所关联的样式会永久性的作用在该元素上 —— 即使该动画已经结束了。
+
+`animate()`：定义一个动画步骤，它把一些样式信息和时序信息组合在一起。
+
+```ts
+const animation = trigger('demo', {
+    state('open', style({
+         color: 'green'
+    })),
+   state('closed', style({
+         color: 'red'
+    })),
+    transition('open => closed','100 ease-in'),
+    transition('closed => open','100 ease-out')
+});
+// 匹配是从上往下的
+
+// expression的求值结果是状态
+<div [@triggerName]="expression">...</div>
+```
+
+1. state函数的第一个参数是状态名称，第二个是style函数
+2. transition的第一个参数是转场方向(可以有多个方向，双向)，第二个接受一个animate()函数
+
+
 
 ### 转场与触发器
 
+#### 通配符状态 void状态
+
+`*` 匹配任何状态，transition的匹配是从上到下。* => *匹配任何状态转变，因此不要放在某个转场前面。
+
+使用`void`状态来为进入或离开页面的元素配置转场
+
+- 当元素离开视图时，就会触发 `* => void` 转场，而不管它离开前处于什么状态。
+- 当元素进入视图时，就会触发 `void => *` 转场，而不管它进入时处于什么状态。
+- 通配符状态 `*` 会匹配*任何*状态 —— 包括 `void`。
+
+#### 播放进入和离开视图时的动画
+
+```html
+<div @myInsertRemoveTrigger *ngIf="isShown" class="insert-remove-container">
+  <p>The box is inserted</p>
+</div>
+```
+
+```ts
+trigger('myInsertRemoveTrigger', {
+  transition(':enter', [
+    style({ opacity: 0 }),
+    animate('5s', style({ opacity: 1 })),
+  ]),
+  transition(':leave', [
+    animate('5s', style({ opacity: 0 }))
+  ])
+})
+
+// 不需要state()
+```
+
+`animate(timings, styles)`的styles为父动画设置动画样式。如果为null，使用目标状态的样式，否则使用styles返回的CSS样式
+
+#### :increment和:decrement
+
+数值增加或减小时，使用这些来启用转场
+
+```ts
+trigger('filterAnimation', [
+  transition(':enter, * => 0, * => -1', []),
+  transition(':increment', [
+    query(':enter', [
+      style({ opacity: 0, width: '0px' }),
+      stagger(50, [
+        animate('300ms ease-out', style({ opacity: 1, width: '*' })),
+      ]),
+    ], { optional: true })
+  ]),
+  transition(':decrement', [
+    query(':leave', [
+      stagger(50, [
+        animate('300ms ease-out', style({ opacity: 0, width: '0px' })),
+      ]),
+    ])
+  ]),
+]),
+```
+
+
+
+#### 多重动画触发器
+
+组件的不同元素可以有多个动画触发器，这些元素之间的父子关系会影响动画的运行方式和时机
+
+##### 父-子动画
+
+父动画优先，子动画被阻塞。为了运行子动画，父动画必须查询出包含子动画的每个元素，然后使用animateChild()函数来运行它们
+
+
+
+##### 在某个HTML元素上禁用动画 @.disabled
+
+禁用动画后，所有内部元素的动画也被禁用。
+
+- 父动画可以使用	query函数手机HTML模板中位于禁止动画区域内部的元素，这些元素可以播放
+- 子动画可以被父动画查询，并稍后使用animateChild播放
+
+#### 动画回调
+
+```html
+<div [@openClose]="isOpen ? 'open' : 'closed'"
+    (@openClose.start)="onAnimationEvent($event)"
+    (@openClose.done)="onAnimationEvent($event)"
+    class="open-close-container">
+</div>
+```
+
+#### 关键帧动画
+
+关键帧允许在单个时间段内进行多种样式更改
+
+![带有偏移的关键帧动画](https://www.angular.cn/generated/images/guide/animations/keyframes-offset-500.png)
+
+
+
+指定偏移量的代码：
+
+```ts
+transition('* => active', [
+  animate('2s', keyframes([
+    style({ backgroundColor: 'blue', offset: 0}),
+    style({ backgroundColor: 'red', offset: 0.8}),
+    style({ backgroundColor: 'orange', offset: 1.0})
+  ])),
+]),
+transition('* => inactive', [
+  animate('2s', keyframes([
+    style({ backgroundColor: 'orange', offset: 0}),
+    style({ backgroundColor: 'red', offset: 0.2}),
+    style({ backgroundColor: 'blue', offset: 1.0})
+  ]))
+]),
+```
+
+运行前不知道某个样式的属性值，可以在在style()中指定通配符*属性，以便在运行期间计算改属性的值
+
 ### 复杂序列
+
+用来控制复杂动画序列的函数如下：
+
+#### `query()` 用于查找一个或多个内部 HTML 元素。
+
+[query()](https://www.angular.cn/api/animations/query)
+
+`query(selector, animation, options?)`   =>   (查询的元素，应用到查询的元素上的动画，配置对象-使用limit字段来限制收集的条目数量上限)
+
+#### `stagger()` 用于为多元素动画应用级联延迟。
+
+#### `group()` 用于并行执行多个动画步骤。
+
+#### `sequence()` 用于逐个顺序执行多个动画步骤。
 
 ### 可复用动画
 
 ### 路由转场动画
 
 ## 安全
+
+### 最佳实践
+- 及时更新angular
+- 避免使用有安全风险的Angular API
+
+### 防范XSS攻击
+
+
 
 ## 国际化
 
